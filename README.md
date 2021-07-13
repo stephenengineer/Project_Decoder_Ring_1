@@ -1,12 +1,14 @@
 # Project: Decoder Ring
 
-This Decoder Ring Project, created through test-driven development, is an app for users to encode and decode messages.  The algorithms available for encoding and decoding are the Caesar shift, Polybius square, and substitution cipher.
+This Decoder Ring Project, created through test-driven development, is an app for users to encode and decode messages. The algorithms available for encoding and decoding are the Caesar shift, Polybius square, and substitution cipher.
 
 ## Technology
 
 ### Built with:
 
 - JavaScript
+- Mocha
+- Chai
 - HTML
 - CSS
 
