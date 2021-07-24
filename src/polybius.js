@@ -57,17 +57,35 @@ const polybiusModule = (function () {
     return decodedMessage;
   }
 
-  //Helper Function
+  // Helper Function
   const inputLength = (input) =>
     [...input].reduce(
       (length, letter) => (letter !== " " ? length + 1 : length),
       0
     );
 
+  // Helper Function
+  const inputContents = (input, encode) => {
+    if (encode) {
+      return [...input].every(
+        (letter) =>
+          letter.toLowerCase().charCodeAt(0) > 96 &&
+          letter.toLowerCase().charCodeAt(0) < 123
+      );
+    }
+    return [...input].every(
+      (letter) =>
+        letter.toLowerCase().charCodeAt(0) > 47 &&
+        letter.toLowerCase().charCodeAt(0) < 58
+    );
+  };
+
   function polybius(input, encode = true) {
     // your solution code here
     // checks if the input length is even for decoding
-    const canContinue = encode || !(inputLength(input) % 2);
+    const canContinue =
+      (encode && inputContents(input, encode)) ||
+      (!(inputLength(input) % 2) && inputContents(input, encode));
     if (!canContinue) return canContinue;
 
     const encodedMessage = encode
