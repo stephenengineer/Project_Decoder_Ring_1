@@ -9,10 +9,10 @@ describe("Caesar Shift", () => {
     expect(caesar("wklqnixo", 3, false)).to.equal("thinkful");
   });
 
-  it("should return false if the shift value is equal to 0, less than -25, greater than 25, or not present", () => {
+  it("should return false if the shift value is equal to 0 or not present", () => {
     expect(caesar("thinkful")).to.be.false;
-    expect(caesar("thinkful", 99)).to.be.false;
-    expect(caesar("thinkful", -26)).to.be.false;
+    expect(caesar("thinkful", 99)).to.be.not.false;
+    expect(caesar("thinkful", -26)).to.be.not.false;
     expect(caesar("thinkful", 0)).to.be.false;
   });
 
@@ -24,6 +24,12 @@ describe("Caesar Shift", () => {
     expect(caesar("y", 3)).to.equal("b");
     expect(caesar("b", 3, false)).to.equal("y");
     expect(caesar("Zebra Magazine", 3)).to.equal("cheud pdjdclqh");
+  });
+
+  it("should handle shifts that go past the end of the alphabet multiple times when encoding", () => {
+    expect(caesar("y", 29)).to.equal("b");
+    expect(caesar("b", 29, false)).to.equal("y");
+    expect(caesar("Zebra Magazine", 29)).to.equal("cheud pdjdclqh");
   });
 
   it("should maintain spaces and other nonalphabetic symbols in the message, before and after encoding or decoding", () => {

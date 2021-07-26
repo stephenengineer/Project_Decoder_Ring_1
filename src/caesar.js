@@ -7,18 +7,22 @@ const caesarModule = (function () {
   // you can add any code you want within this function scope
 
   // Helper Function
-  function caesarShift(charCodeProxy, directionalShift) {
+  function caesarShift(charCodeProxy, directionalShiftBeforeProcessing) {
     // Check that ASCII value is within range of a-z
     // If the shift would bring the ASCII value over 122, we need to wraparound
     // Calculate difference between boundary and ASCII value
     // Subtract that amount from directionalShift, then add the remaining shift starting from the other boundary
     // Do a similar method in the opposite direction if the shift would bring the ASCII value under 97
     // If the directionalShift won't bring the character code 'out of bounds,' just add it normally to the character code
+    // Refactoring code for going over the bounds 7/26/21
+    let directionalShift = directionalShiftBeforeProcessing;
     if (charCodeProxy >= 97 && charCodeProxy <= 122) {
       if (charCodeProxy + directionalShift > 122) {
-        charCodeProxy = 96 + directionalShift - 122 + charCodeProxy;
+        directionalShift -= 26;
+        charCodeProxy = caesarShift(charCodeProxy, directionalShift);
       } else if (charCodeProxy + directionalShift < 97) {
-        charCodeProxy = 123 + directionalShift - 97 + charCodeProxy;
+        directionalShift += 26;
+        charCodeProxy = caesarShift(charCodeProxy, directionalShift);
       } else charCodeProxy += directionalShift;
     }
     return charCodeProxy;
@@ -27,7 +31,7 @@ const caesarModule = (function () {
   function caesar(input, shift, encode = true) {
     // your solution code here
     // checks if the shift value is equal to 0, less than -25, greater than 25, or not present
-    const canContinue = !!shift && shift >= -25 && shift <= 25;
+    const canContinue = !!shift;
     if (!canContinue) return canContinue;
     // Set encoding variable to decide the direction of transcription
     const directionalShift = encode ? shift : -shift;
