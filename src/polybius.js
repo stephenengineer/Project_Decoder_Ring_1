@@ -27,15 +27,27 @@ const polybiusModule = (function () {
         return;
       }
       const charCodeProxy = letter.toLowerCase().charCodeAt(0);
-      // Correcting for i/j sharing a table value
-      const tableValue =
-        charCodeProxy - 96 > 9 ? charCodeProxy - 96 - 1 : charCodeProxy - 96;
-      // To get the proper column for each value that is cleanly divisible by 5
-      const column = tableValue % 5 ? tableValue % 5 : 5;
-      // To get the proper row for each value that is cleanly divisible by 5
-      let row = tableValue % 5 ? tableValue / 5 + 1 : tableValue / 5;
-      row = Math.trunc(row);
-      encodedMessage += column.toString() + row.toString();
+      // First check for special characters
+      if (
+        charCodeProxy < 47 ||
+        (charCodeProxy > 57 && charCodeProxy < 97) ||
+        charCodeProxy > 122
+      ) {
+        encodedMessage += letter;
+        // Then check for numbers and "/"
+      } else if (charCodeProxy >= 47 && charCodeProxy <= 57) {
+        encodedMessage += "/" + letter;
+      } else {
+        // Correcting for i/j sharing a table value
+        const tableValue =
+          charCodeProxy - 96 > 9 ? charCodeProxy - 96 - 1 : charCodeProxy - 96;
+        // To get the proper column for each value that is cleanly divisible by 5
+        const column = tableValue % 5 ? tableValue % 5 : 5;
+        // To get the proper row for each value that is cleanly divisible by 5
+        let row = tableValue % 5 ? tableValue / 5 + 1 : tableValue / 5;
+        row = Math.trunc(row);
+        encodedMessage += column.toString() + row.toString();
+      }
     });
     return encodedMessage;
   }
@@ -48,9 +60,24 @@ const polybiusModule = (function () {
   function polybiusDecode(input) {
     let decodedMessage = "";
     for (let i = 0; i < input.length; i += 2) {
-      if (input[i] === " ") {
+      let charCodeProxy = input[i].toLowerCase().charCodeAt(0);
+      // First check for special characters
+      while (
+        charCodeProxy < 47 ||
+        (charCodeProxy > 57 && charCodeProxy < 97) ||
+        charCodeProxy > 122
+      ) {
         decodedMessage += input[i];
         i++;
+        if (i >= input.length) break;
+        else charCodeProxy = input[i].toLowerCase().charCodeAt(0);
+      }
+      // Upon exiting, check to see if we're still in bounds of loop
+      if (i >= input.length) break;
+      // Then check for numbers and "/"
+      if (input[i] === "/") {
+        decodedMessage += input[i + 1];
+        continue;
       }
       decodedMessage += polybiusTable[input[i] - 1][input[i + 1] - 1];
     }
@@ -60,23 +87,20 @@ const polybiusModule = (function () {
   // Helper Function
   const inputLength = (input) =>
     [...input].reduce(
-      (length, letter) => (letter !== " " ? length + 1 : length),
+      (length, letter) =>
+        letter.toLowerCase().charCodeAt(0) > 46 &&
+        letter.toLowerCase().charCodeAt(0) < 58
+          ? length + 1
+          : length,
       0
     );
 
   // Helper Function
-  const inputContents = (input, encode) => {
-    if (encode) {
-      return [...input].every(
-        (letter) =>
-          letter.toLowerCase().charCodeAt(0) > 96 &&
-          letter.toLowerCase().charCodeAt(0) < 123
-      );
-    }
+  const inputContents = (input) => {
     return [...input].every(
       (letter) =>
-        letter.toLowerCase().charCodeAt(0) > 47 &&
-        letter.toLowerCase().charCodeAt(0) < 58
+        letter.toLowerCase().charCodeAt(0) < 97 ||
+        letter.toLowerCase().charCodeAt(0) > 122
     );
   };
 
@@ -84,8 +108,7 @@ const polybiusModule = (function () {
     // your solution code here
     // checks if the input length is even for decoding
     const canContinue =
-      (encode && inputContents(input, encode)) ||
-      (!(inputLength(input) % 2) && inputContents(input, encode));
+      encode || (!(inputLength(input) % 2) && inputContents(input));
     if (!canContinue) return canContinue;
 
     const encodedMessage = encode
