@@ -79,6 +79,9 @@ const polybiusModule = (function () {
         decodedMessage += input[i + 1];
         continue;
       }
+      let withinPolybiusLimits =
+        input[i] > 0 && input[i] < 6 && input[i + 1] > 0 && input[i + 1] < 6;
+      if (!withinPolybiusLimits) return withinPolybiusLimits;
       decodedMessage += polybiusTable[input[i] - 1][input[i + 1] - 1];
     }
     return decodedMessage;
