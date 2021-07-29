@@ -68,10 +68,17 @@ const substitutionModule = (function () {
     );
   }
 
+  function checkForSpaces(alphabet) {
+    return [...alphabet].every((letter) => letter !== " ");
+  }
+
   function substitution(input, alphabet, encode = true) {
     // your solution code here
     const canContinue =
-      !!alphabet && alphabet.length === 26 && checkForDuplicates(alphabet);
+      !!alphabet &&
+      alphabet.length === 26 &&
+      checkForDuplicates(alphabet) &&
+      checkForSpaces(alphabet);
     if (!canContinue) return canContinue;
 
     const encodedMessage = encode
