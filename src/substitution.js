@@ -36,7 +36,7 @@ const substitutionModule = (function () {
     Z: 25,
   };
 
-  // Standard slphabet string for decoding
+  // Standard alphabet string for decoding
   const standardAlphabet = "abcdefghijklmnopqrstuvwxyz";
 
   function subEncode(input, alphabet) {
@@ -72,8 +72,9 @@ const substitutionModule = (function () {
     return [...alphabet].every((letter) => letter !== " ");
   }
 
-  function substitution(input, alphabet, encode = true) {
+  function substitution(input, enteredAlphabet, encode = true) {
     // your solution code here
+    const alphabet = enteredAlphabet.toLowerCase();
     const canContinue =
       !!alphabet &&
       alphabet.length === 26 &&
