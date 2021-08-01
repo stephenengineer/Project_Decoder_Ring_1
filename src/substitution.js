@@ -49,7 +49,8 @@ const substitutionModule = (function () {
     return encodedMessage;
   }
 
-  function subDecode(input, alphabet) {
+  function subDecode(enteredInput, alphabet) {
+    const input = enteredInput.toLowerCase();
     let decodedMessage = "";
     [...input].forEach(
       (letter) =>
