@@ -73,6 +73,17 @@ const substitutionModule = (function () {
     return [...alphabet].every((letter) => letter !== " ");
   }
 
+  function checkForValidInput(enteredInput, alphabet, encode = true) {
+    const input = enteredInput.toLowerCase();
+    if (encode) {
+      return [...input].every(
+        (letter) =>
+          letter === " " ||
+          (letter.charCodeAt(0) > 96 && letter.charCodeAt(0) < 123)
+      );
+    }
+  }
+
   function substitution(input, enteredAlphabet, encode = true) {
     // your solution code here
     const alphabet = enteredAlphabet.toLowerCase();
@@ -80,7 +91,8 @@ const substitutionModule = (function () {
       !!alphabet &&
       alphabet.length === 26 &&
       checkForDuplicates(alphabet) &&
-      checkForSpaces(alphabet);
+      checkForSpaces(alphabet) &&
+      checkForValidInput(input, alphabet);
     if (!canContinue) return canContinue;
 
     const encodedMessage = encode
